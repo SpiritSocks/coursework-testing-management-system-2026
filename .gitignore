@@ -1,0 +1,15 @@
+# .NET
+bin/
+obj/
+*.user
+# IDE
+.idea/
+.vs/
+.vscode/
+# macOS
+.DS_Store
+# Frontend (for later)
+node_modules/
+dist/
+build/
+.env
