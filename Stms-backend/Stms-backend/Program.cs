@@ -1,10 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using Stms_backend.Data;
+using Stms_backend.Services;
 
 namespace Stms_backend;
 
-public static class Program
+public class Program
 {
     public static void Main(string[] args)
     {
@@ -14,6 +15,8 @@ public static class Program
         
         builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
+        
+        builder.Services.AddScoped<IProjectService, ProjectService>();
         
         builder.Services.AddOpenApi();
         
