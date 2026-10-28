@@ -44,6 +44,270 @@ namespace Stms_backend.Migrations
 
                     b.ToTable("Projects");
                 });
+
+            modelBuilder.Entity("Stms_backend.Models.TestCase", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ExpectedResult")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Preconditions")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Priority")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Steps")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("TestSuiteId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TestSuiteId");
+
+                    b.ToTable("TestCases");
+                });
+
+            modelBuilder.Entity("Stms_backend.Models.TestResult", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ExecutedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("ExecutedById")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("TestCaseId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TestRunId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExecutedById");
+
+                    b.HasIndex("TestCaseId");
+
+                    b.HasIndex("TestRunId", "TestCaseId")
+                        .IsUnique();
+
+                    b.ToTable("TestResults");
+                });
+
+            modelBuilder.Entity("Stms_backend.Models.TestRun", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("CreatedById")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("StartedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("TestRuns");
+                });
+
+            modelBuilder.Entity("Stms_backend.Models.TestSuite", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("TestSuites");
+                });
+
+            modelBuilder.Entity("Stms_backend.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Stms_backend.Models.TestCase", b =>
+                {
+                    b.HasOne("Stms_backend.Models.TestSuite", "TestSuite")
+                        .WithMany("Cases")
+                        .HasForeignKey("TestSuiteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TestSuite");
+                });
+
+            modelBuilder.Entity("Stms_backend.Models.TestResult", b =>
+                {
+                    b.HasOne("Stms_backend.Models.User", "ExecutedBy")
+                        .WithMany()
+                        .HasForeignKey("ExecutedById")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Stms_backend.Models.TestCase", "TestCase")
+                        .WithMany("Results")
+                        .HasForeignKey("TestCaseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Stms_backend.Models.TestRun", "TestRun")
+                        .WithMany("Results")
+                        .HasForeignKey("TestRunId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ExecutedBy");
+
+                    b.Navigation("TestCase");
+
+                    b.Navigation("TestRun");
+                });
+
+            modelBuilder.Entity("Stms_backend.Models.TestRun", b =>
+                {
+                    b.HasOne("Stms_backend.Models.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Stms_backend.Models.Project", "Project")
+                        .WithMany("Runs")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CreatedBy");
+
+                    b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("Stms_backend.Models.TestSuite", b =>
+                {
+                    b.HasOne("Stms_backend.Models.Project", "Project")
+                        .WithMany("Suites")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("Stms_backend.Models.Project", b =>
+                {
+                    b.Navigation("Runs");
+
+                    b.Navigation("Suites");
+                });
+
+            modelBuilder.Entity("Stms_backend.Models.TestCase", b =>
+                {
+                    b.Navigation("Results");
+                });
+
+            modelBuilder.Entity("Stms_backend.Models.TestRun", b =>
+                {
+                    b.Navigation("Results");
+                });
+
+            modelBuilder.Entity("Stms_backend.Models.TestSuite", b =>
+                {
+                    b.Navigation("Cases");
+                });
 #pragma warning restore 612, 618
         }
     }

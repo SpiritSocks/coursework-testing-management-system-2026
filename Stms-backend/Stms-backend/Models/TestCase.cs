@@ -12,5 +12,7 @@ public class TestCase
     
     public int TestSuiteId { get; set; }
     public TestSuite TestSuite { get; set; } = null!;
+
+    public List<TestResult> Results { get; set; } = [];
     
 }

@@ -8,5 +8,6 @@ public class Project
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public List<TestSuite> Suites { get; set; } = [];
+    public List<TestRun> Runs { get; set; } = [];
     
 }
