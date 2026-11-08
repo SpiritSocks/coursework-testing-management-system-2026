@@ -1,0 +1,73 @@
+/* Цвета из дизайна, используются как var(--accent) */
+:root {
+  --accent: #2f5bea;
+  --accent-hover: #1e3fb0;
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --sidebar-bg: #14161b;
+  --text: #1a1d23;
+  --text-muted: #5b6270;
+  --border: #e3e6ea;
+  --border-strong: #d5d9df;
+
+  --font-body: Inter, system-ui, sans-serif;
+  --font-heading: 'Space Grotesk', Inter, sans-serif;
+
+  font-family: var(--font-body);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  margin: 0;
+}
+
+.button-primary,
+.button-secondary {
+  height: 44px;
+  padding: 0 18px;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.button-primary {
+  border: 0;
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.button-primary:hover {
+  background: var(--accent-hover);
+}
+
+.button-primary:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.button-secondary {
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.button-secondary:hover {
+  background: var(--bg);
+}
+
+/* Текст только для экранных дикторов, на экране не виден */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

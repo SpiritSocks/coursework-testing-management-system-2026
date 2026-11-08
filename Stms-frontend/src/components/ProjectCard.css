@@ -1,0 +1,94 @@
+.project-card {
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.project-card:hover,
+.project-card:focus-visible {
+  border-color: var(--accent);
+}
+
+.project-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.project-card-name {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 19px;
+  font-weight: 600;
+}
+
+.project-card-date {
+  font-size: 12px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.project-card-description {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-muted);
+  min-height: 42px;
+}
+
+.project-card-stats {
+  display: flex;
+  gap: 16px;
+  font-size: 13px;
+  color: #3a404c;
+}
+
+.project-card-stats strong {
+  font-weight: 600;
+}
+
+.project-card-run {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 12px;
+  border-top: 1px solid #eef0f3;
+}
+
+.project-card-run-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.project-card-pass {
+  color: #146c43;
+  font-weight: 600;
+}
+
+.progress {
+  height: 6px;
+  border-radius: 3px;
+  background: #eceef1;
+  display: flex;
+  overflow: hidden;
+}
+
+.progress-passed {
+  background: #2e9e64;
+}
+
+.progress-failed {
+  background: #d9473b;
+}
