@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import { CheckIcon, FolderIcon, LayersIcon, PlayIcon } from './Icons'
 import './Sidebar.css'
 
-// Пока готова только страница "projects".
+// Готовы страницы "projects" и "cases".
 export type PageName = 'projects' | 'cases' | 'runs'
 
 type NavItem = {

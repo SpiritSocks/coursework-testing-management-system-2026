@@ -12,3 +12,8 @@
   flex-direction: column;
   gap: 6px;
 }
+
+.placeholder-button {
+  align-self: flex-start;
+  margin-top: 12px;
+}
