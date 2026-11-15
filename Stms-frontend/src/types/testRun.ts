@@ -16,8 +16,12 @@ export interface TestRun {
 export interface TestRunResult {
   id: number
   testCaseId: number
+  testSuiteId: number
   title: string
   suiteName: string
+  preconditions: string | null
+  steps: string
+  expectedResult: string
   status: ResultStatus
   comment: string | null
 }

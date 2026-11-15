@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react'
 import { getProjects } from '../api/projectsApi'
 import { completeRun, createRun, getRun, getRuns, updateResult } from '../api/testRunsApi'
+import RunExecutionWorkspace from '../components/RunExecutionWorkspace'
 import type { Project } from '../types/project'
 import type { ResultStatus, TestRun, TestRunDetails } from '../types/testRun'
 import './TestRunsPage.css'
@@ -8,9 +9,6 @@ import './TestRunsPage.css'
 type TestRunsPageProps = { initialProject: Project | null, initialRunId?: number | null }
 
 const resultStatuses: Exclude<ResultStatus, 'Untested'>[] = ['Passed', 'Failed', 'Blocked', 'Skipped']
-const statusLabels: Record<Exclude<ResultStatus, 'Untested'>, string> = {
-  Passed: 'Pass', Failed: 'Fail', Blocked: 'Block', Skipped: 'Skip',
-}
 
 export default function TestRunsPage({ initialProject, initialRunId }: TestRunsPageProps) {
   const [projects, setProjects] = useState<Project[]>([])
@@ -144,12 +142,14 @@ export default function TestRunsPage({ initialProject, initialRunId }: TestRunsP
           <div className="run-legend">{([...resultStatuses, 'Untested'] as ResultStatus[]).map((status) => <span key={status}><i className={`dot dot-${status}`} />{status} <strong>{counts[status]}</strong></span>)}</div>
         </section>
 
-        <section className="run-results" aria-label="Results"><table><thead><tr><th>Case</th><th>Title</th><th>Suite</th><th>Result</th><th>Comment</th></tr></thead>
-          <tbody>{run.results.length === 0 && <tr><td colSpan={5} className="results-empty">This project had no test cases when the run was created.</td></tr>}{run.results.map((result) => <tr key={result.id}>
-            <td>TC-{result.testCaseId}</td><td className="result-title">{result.title}</td><td>{result.suiteName}</td>
-            <td><div className="status-buttons" role="group" aria-label={`Result for TC-${result.testCaseId}`}>{resultStatuses.map((status) => <button type="button" key={status} className={result.status === status ? `active status-${status}` : ''} aria-pressed={result.status === status} disabled={Boolean(run.completedAt)} onClick={() => changeStatus(result.id, status)}>{statusLabels[status]}</button>)}</div></td>
-            <td><input value={result.comment ?? ''} onChange={(event) => changeComment(result.id, event.target.value)} onBlur={() => saveComment(result.id)} disabled={Boolean(run.completedAt)} maxLength={2000} placeholder="Add a comment" aria-label={`Comment for TC-${result.testCaseId}`} /></td>
-          </tr>)}</tbody></table></section>
+        <RunExecutionWorkspace
+          key={run.id}
+          results={run.results}
+          isCompleted={Boolean(run.completedAt)}
+          onStatusChange={changeStatus}
+          onCommentChange={changeComment}
+          onCommentSave={saveComment}
+        />
       </>}
     </main>
   )
