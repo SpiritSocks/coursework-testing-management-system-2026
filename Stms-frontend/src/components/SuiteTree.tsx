@@ -1,23 +1,23 @@
-import { useState, type FormEvent } from 'react'
-import type { Priority, TestCase, TestSuite } from '../types/testCase'
-import { ChevronRightIcon, SearchIcon } from './Icons'
-import './SuiteTree.css'
+import { useState, type FormEvent } from "react";
+import type { Priority, TestCase, TestSuite } from "../types/testCase";
+import { ChevronRightIcon, SearchIcon } from "./Icons";
+import "./SuiteTree.css";
 
-export type PriorityFilter = 'All' | Priority
+export type PriorityFilter = "All" | Priority;
 
-const filters: PriorityFilter[] = ['All', 'High', 'Medium', 'Low']
+const filters: PriorityFilter[] = ["All", "High", "Medium", "Low"];
 
 type SuiteTreeProps = {
-  suites: TestSuite[]
-  cases: TestCase[] // уже отфильтрованные страницей
-  search: string
-  onSearchChange: (text: string) => void
-  priority: PriorityFilter
-  onPriorityChange: (priority: PriorityFilter) => void
-  selectedCaseId: number | null
-  onSelectCase: (testCase: TestCase) => void
-  onCreateSuite: (name: string) => Promise<void>
-}
+  suites: TestSuite[];
+  cases: TestCase[]; // уже отфильтрованные страницей
+  search: string;
+  onSearchChange: (text: string) => void;
+  priority: PriorityFilter;
+  onPriorityChange: (priority: PriorityFilter) => void;
+  selectedCaseId: number | null;
+  onSelectCase: (testCase: TestCase) => void;
+  onCreateSuite: (name: string) => Promise<void>;
+};
 
 // Левая колонка: поиск, фильтр по приоритету и дерево "набор -> кейсы".
 export default function SuiteTree({
@@ -32,34 +32,36 @@ export default function SuiteTree({
   onCreateSuite,
 }: SuiteTreeProps) {
   // Id свёрнутых наборов. По умолчанию все развёрнуты.
-  const [closedSuiteIds, setClosedSuiteIds] = useState<number[]>([])
+  const [closedSuiteIds, setClosedSuiteIds] = useState<number[]>([]);
 
   // Маленькая форма "+ New suite"
-  const [isAddingSuite, setIsAddingSuite] = useState(false)
-  const [suiteName, setSuiteName] = useState('')
-  const [suiteError, setSuiteError] = useState<string | null>(null)
+  const [isAddingSuite, setIsAddingSuite] = useState(false);
+  const [suiteName, setSuiteName] = useState("");
+  const [suiteError, setSuiteError] = useState<string | null>(null);
 
   function toggleSuite(suiteId: number) {
     setClosedSuiteIds((current) =>
       current.includes(suiteId)
         ? current.filter((id) => id !== suiteId)
         : [...current, suiteId],
-    )
+    );
   }
 
   async function handleAddSuite(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    if (suiteName.trim() === '') {
-      setSuiteError('Please enter a suite name.')
-      return
+    event.preventDefault();
+    if (suiteName.trim() === "") {
+      setSuiteError("Please enter a suite name.");
+      return;
     }
     try {
-      await onCreateSuite(suiteName.trim())
-      setSuiteName('')
-      setSuiteError(null)
-      setIsAddingSuite(false)
+      await onCreateSuite(suiteName.trim());
+      setSuiteName("");
+      setSuiteError(null);
+      setIsAddingSuite(false);
     } catch (err) {
-      setSuiteError(err instanceof Error ? err.message : 'Something went wrong.')
+      setSuiteError(
+        err instanceof Error ? err.message : "Something went wrong.",
+      );
     }
   }
 
@@ -81,7 +83,7 @@ export default function SuiteTree({
           <button
             key={f}
             type="button"
-            className={f === priority ? 'chip active' : 'chip'}
+            className={f === priority ? "chip active" : "chip"}
             aria-pressed={f === priority}
             onClick={() => onPriorityChange(f)}
           >
@@ -91,8 +93,14 @@ export default function SuiteTree({
       </div>
 
       <div className="tree-summary">
-        <span>{cases.length} cases · {suites.length} suites</span>
-        <button type="button" className="link-button" onClick={() => setIsAddingSuite(true)}>
+        <span>
+          {cases.length} cases · {suites.length} suites
+        </span>
+        <button
+          type="button"
+          className="link-button"
+          onClick={() => setIsAddingSuite(true)}
+        >
           + New suite
         </button>
       </div>
@@ -109,18 +117,28 @@ export default function SuiteTree({
             aria-label="Suite name"
             autoFocus
           />
-          <button type="submit" className="button-primary small">Add</button>
-          <button type="button" className="button-secondary small" onClick={() => setIsAddingSuite(false)}>
+          <button type="submit" className="button-primary small">
+            Add
+          </button>
+          <button
+            type="button"
+            className="button-secondary small"
+            onClick={() => setIsAddingSuite(false)}
+          >
             Cancel
           </button>
-          {suiteError && <p className="form-error" role="alert">{suiteError}</p>}
+          {suiteError && (
+            <p className="form-error" role="alert">
+              {suiteError}
+            </p>
+          )}
         </form>
       )}
 
       <div className="tree-list">
         {suites.map((suite) => {
-          const isOpen = !closedSuiteIds.includes(suite.id)
-          const suiteCases = cases.filter((c) => c.testSuiteId === suite.id)
+          const isOpen = !closedSuiteIds.includes(suite.id);
+          const suiteCases = cases.filter((c) => c.testSuiteId === suite.id);
 
           return (
             <div key={suite.id} className="tree-suite">
@@ -130,36 +148,45 @@ export default function SuiteTree({
                 aria-expanded={isOpen}
                 onClick={() => toggleSuite(suite.id)}
               >
-                <span className={isOpen ? 'chevron open' : 'chevron'}>
+                <span className={isOpen ? "chevron open" : "chevron"}>
                   <ChevronRightIcon />
                 </span>
                 <span className="suite-name">{suite.name}</span>
                 <span className="suite-count">{suiteCases.length}</span>
               </button>
 
-              {isOpen && suiteCases.map((testCase) => (
-                <button
-                  key={testCase.id}
-                  type="button"
-                  className={testCase.id === selectedCaseId ? 'case-row active' : 'case-row'}
-                  aria-current={testCase.id === selectedCaseId}
-                  onClick={() => onSelectCase(testCase)}
-                >
-                  <span className="case-id">TC-{testCase.id}</span>
-                  <span className="case-title">{testCase.title}</span>
-                  <span className={`priority-text priority-${testCase.priority}`}>
-                    {testCase.priority === 'Medium' ? 'Med' : testCase.priority}
-                  </span>
-                </button>
-              ))}
+              {isOpen &&
+                suiteCases.map((testCase) => (
+                  <button
+                    key={testCase.id}
+                    type="button"
+                    className={
+                      testCase.id === selectedCaseId
+                        ? "case-row active"
+                        : "case-row"
+                    }
+                    aria-current={testCase.id === selectedCaseId}
+                    onClick={() => onSelectCase(testCase)}
+                  >
+                    <span className="case-id">TC-{testCase.id}</span>
+                    <span className="case-title">{testCase.title}</span>
+                    <span
+                      className={`priority-text priority-${testCase.priority}`}
+                    >
+                      {testCase.priority === "Medium"
+                        ? "Med"
+                        : testCase.priority}
+                    </span>
+                  </button>
+                ))}
 
               {isOpen && suiteCases.length === 0 && (
                 <p className="tree-empty">No cases here.</p>
               )}
             </div>
-          )
+          );
         })}
       </div>
     </section>
-  )
+  );
 }

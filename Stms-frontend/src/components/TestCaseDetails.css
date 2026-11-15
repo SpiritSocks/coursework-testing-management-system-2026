@@ -10,11 +10,20 @@
 }
 
 .case-details-top {
+  position: relative;
   padding: 20px 24px 16px;
   display: flex;
   flex-direction: column;
   gap: 12px;
   border-bottom: 1px solid var(--border);
+}
+
+.case-edit-button { position: absolute; top: 16px; right: 20px; height: 38px; }
+.case-details-top .case-badges, .case-details-top .case-details-title { padding-right: 110px; }
+
+@media (max-width: 560px) {
+  .case-edit-button { position: static; align-self: flex-start; order: 3; }
+  .case-details-top .case-badges, .case-details-top .case-details-title { padding-right: 0; }
 }
 
 .case-badges {

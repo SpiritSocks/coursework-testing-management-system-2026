@@ -36,3 +36,7 @@ export interface CreateTestCaseData {
   expectedResult: string
   priority: Priority
 }
+
+export interface UpdateTestCaseData extends CreateTestCaseData {
+  testSuiteId: number
+}

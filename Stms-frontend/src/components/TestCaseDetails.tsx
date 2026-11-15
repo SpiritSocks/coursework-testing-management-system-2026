@@ -6,10 +6,11 @@ import './TestCaseDetails.css'
 type TestCaseDetailsProps = {
   testCase: TestCase
   suiteName: string
+  onEdit: () => void
 }
 
 // Правая колонка: всё о выбранном кейсе.
-export default function TestCaseDetails({ testCase, suiteName }: TestCaseDetailsProps) {
+export default function TestCaseDetails({ testCase, suiteName, onEdit }: TestCaseDetailsProps) {
   // Шаги хранятся одной строкой, каждый шаг на новой строке.
   // Пустые строки отбрасываем.
   const steps = testCase.steps
@@ -20,6 +21,7 @@ export default function TestCaseDetails({ testCase, suiteName }: TestCaseDetails
   return (
     <article aria-label="Test case" className="case-details">
       <div className="case-details-top">
+        <button type="button" className="case-edit-button button-secondary" onClick={onEdit}>Edit case</button>
         <div className="case-badges">
           <span className="case-id case-id-badge">TC-{testCase.id}</span>
           <span className={`priority-badge priority-${testCase.priority}`}>

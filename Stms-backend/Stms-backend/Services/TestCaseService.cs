@@ -99,6 +99,17 @@ public class TestCaseService : ITestCaseService
             return false;
         }
 
+        if (dto.TestSuiteId is int suiteId)
+        {
+            var suiteExists = await _db.TestSuites.AnyAsync(s => s.Id == suiteId);
+            if (!suiteExists)
+            {
+                return false;
+            }
+
+            testCase.TestSuiteId = suiteId;
+        }
+
         testCase.Title = dto.Title;
         testCase.Preconditions = dto.Preconditions;
         testCase.Steps = dto.Steps;

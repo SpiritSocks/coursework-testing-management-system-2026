@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import { createSuite, getSuites } from '../api/testSuitesApi'
-import { createCase, getCases } from '../api/testCasesApi'
+import { createCase, deleteCase, getCases, updateCase } from '../api/testCasesApi'
+import EditTestCaseForm from '../components/EditTestCaseForm'
 import NewTestCaseForm from '../components/NewTestCaseForm'
 import SuiteTree, { type PriorityFilter } from '../components/SuiteTree'
 import TestCaseDetails from '../components/TestCaseDetails'
 import { PlusIcon } from '../components/Icons'
 import type { Project } from '../types/project'
-import type { CreateTestCaseData, TestCase, TestSuite } from '../types/testCase'
+import type { CreateTestCaseData, TestCase, TestSuite, UpdateTestCaseData } from '../types/testCase'
 import './ProjectsPage.css' // общие стили заголовка страницы и сообщений
 import './TestCasesPage.css'
 
@@ -33,6 +34,7 @@ export default function TestCasesPage({ project, onBackToProjects }: TestCasesPa
   const [priority, setPriority] = useState<PriorityFilter>('All')
   const [selectedCaseId, setSelectedCaseId] = useState<number | null>(null)
   const [isFormOpen, setIsFormOpen] = useState(false)
+  const [editingCaseId, setEditingCaseId] = useState<number | null>(null)
 
   // Загружаем наборы и кейсы при открытии страницы
   useEffect(() => {
@@ -57,6 +59,19 @@ export default function TestCasesPage({ project, onBackToProjects }: TestCasesPa
     setIsFormOpen(false)
   }
 
+  async function handleUpdateCase(testCase: TestCase, data: UpdateTestCaseData) {
+    await updateCase(testCase.id, data)
+    setCases((current) => current.map((item) => item.id === testCase.id ? { ...item, ...data } : item))
+    setEditingCaseId(null)
+  }
+
+  async function handleDeleteCase(testCase: TestCase) {
+    await deleteCase(testCase.id)
+    setCases((current) => current.filter((item) => item.id !== testCase.id))
+    setSelectedCaseId(null)
+    setEditingCaseId(null)
+  }
+
   // Фильтрация: поиск по названию или "TC-123", плюс фильтр по приоритету
   const searchText = search.trim().toLowerCase()
   const visibleCases = cases.filter(
@@ -70,10 +85,11 @@ export default function TestCasesPage({ project, onBackToProjects }: TestCasesPa
   const selectedCase =
     visibleCases.find((c) => c.id === selectedCaseId) ?? visibleCases[0] ?? null
   const selectedSuite = suites.find((s) => s.id === selectedCase?.testSuiteId)
+  const editingCase = cases.find((testCase) => testCase.id === editingCaseId) ?? null
 
   return (
     <main className="test-cases-page">
-      <header className="page-header">
+      {!editingCase && <header className="page-header">
         <div className="page-heading">
           <nav aria-label="Breadcrumb" className="breadcrumb">
             <button type="button" className="breadcrumb-link" onClick={onBackToProjects}>
@@ -97,9 +113,9 @@ export default function TestCasesPage({ project, onBackToProjects }: TestCasesPa
             New case
           </button>
         </div>
-      </header>
+      </header>}
 
-      {isFormOpen && (
+      {!editingCase && isFormOpen && (
         <NewTestCaseForm
           suites={suites}
           onSubmit={handleCreateCase}
@@ -115,7 +131,18 @@ export default function TestCasesPage({ project, onBackToProjects }: TestCasesPa
         </p>
       )}
 
-      {!isLoading && !loadError && (
+      {!isLoading && !loadError && editingCase && (
+        <EditTestCaseForm
+          testCase={editingCase}
+          suites={suites}
+          projectName={project.name}
+          onSave={(data) => handleUpdateCase(editingCase, data)}
+          onDelete={() => handleDeleteCase(editingCase)}
+          onCancel={() => setEditingCaseId(null)}
+        />
+      )}
+
+      {!isLoading && !loadError && !editingCase && (
         <div className="test-cases-layout">
           <SuiteTree
             suites={suites}
@@ -133,6 +160,7 @@ export default function TestCasesPage({ project, onBackToProjects }: TestCasesPa
             <TestCaseDetails
               testCase={selectedCase}
               suiteName={selectedSuite?.name ?? ''}
+              onEdit={() => setEditingCaseId(selectedCase.id)}
             />
           ) : (
             <div className="case-empty">

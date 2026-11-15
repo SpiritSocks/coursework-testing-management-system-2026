@@ -34,6 +34,8 @@ public class CreateTestCaseDto
 
 public class UpdateTestCaseDto
 {
+    public int? TestSuiteId { get; set; }
+
     [Required, MaxLength(300)]
     public string Title { get; set; } = string.Empty;
 
