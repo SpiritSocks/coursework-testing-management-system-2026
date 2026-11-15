@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { CheckIcon, FolderIcon, LayersIcon, PlayIcon } from './Icons'
+import { FolderIcon, LayersIcon, PlayIcon } from './Icons'
 import './Sidebar.css'
 
 // Готовы страницы "projects" и "cases".
@@ -36,9 +36,6 @@ export default function Sidebar({ activePage, onNavigate, userName, userRole }: 
   return (
     <aside className="sidebar">
       <div className="sidebar-logo">
-        <div className="sidebar-logo-mark">
-          <CheckIcon />
-        </div>
         <div className="sidebar-logo-text">
           <span className="sidebar-logo-name">STMS</span>
           <span className="sidebar-logo-caption">Test management</span>
