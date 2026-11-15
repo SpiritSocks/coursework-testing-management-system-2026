@@ -23,7 +23,22 @@ public class ProjectService : IProjectService
                 Id = p.Id,
                 Name = p.Name,
                 Description = p.Description,
-                CreatedAt = p.CreatedAt
+                CreatedAt = p.CreatedAt,
+                SuiteCount = p.Suites.Count,
+                CaseCount = p.Suites.SelectMany(suite => suite.Cases).Count(),
+                RunCount = p.Runs.Count,
+                LastRunPassed = p.Runs
+                    .OrderByDescending(run => run.StartedAt)
+                    .Select(run => run.Results.Count == 0
+                        ? 0
+                        : run.Results.Count(result => result.Status == ResultStatus.Passed) * 100 / run.Results.Count)
+                    .FirstOrDefault(),
+                LastRunFailed = p.Runs
+                    .OrderByDescending(run => run.StartedAt)
+                    .Select(run => run.Results.Count == 0
+                        ? 0
+                        : run.Results.Count(result => result.Status == ResultStatus.Failed) * 100 / run.Results.Count)
+                    .FirstOrDefault()
             })
             .ToListAsync();
     }
@@ -37,7 +52,22 @@ public class ProjectService : IProjectService
                 Id = p.Id,
                 Name = p.Name,
                 Description = p.Description,
-                CreatedAt = p.CreatedAt
+                CreatedAt = p.CreatedAt,
+                SuiteCount = p.Suites.Count,
+                CaseCount = p.Suites.SelectMany(suite => suite.Cases).Count(),
+                RunCount = p.Runs.Count,
+                LastRunPassed = p.Runs
+                    .OrderByDescending(run => run.StartedAt)
+                    .Select(run => run.Results.Count == 0
+                        ? 0
+                        : run.Results.Count(result => result.Status == ResultStatus.Passed) * 100 / run.Results.Count)
+                    .FirstOrDefault(),
+                LastRunFailed = p.Runs
+                    .OrderByDescending(run => run.StartedAt)
+                    .Select(run => run.Results.Count == 0
+                        ? 0
+                        : run.Results.Count(result => result.Status == ResultStatus.Failed) * 100 / run.Results.Count)
+                    .FirstOrDefault()
             })
             .FirstOrDefaultAsync();
     }

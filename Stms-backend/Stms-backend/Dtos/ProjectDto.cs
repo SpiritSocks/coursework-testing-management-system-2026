@@ -8,6 +8,11 @@ public class ProjectDto
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
     public DateTime CreatedAt { get; set; }
+    public int SuiteCount { get; set; }
+    public int CaseCount { get; set; }
+    public int RunCount { get; set; }
+    public int LastRunPassed { get; set; }
+    public int LastRunFailed { get; set; }
 }
 
 public class CreateProjectDto
