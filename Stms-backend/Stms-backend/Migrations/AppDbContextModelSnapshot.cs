@@ -135,7 +135,7 @@ namespace Stms_backend.Migrations
                     b.Property<DateTime?>("CompletedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("CreatedById")
+                    b.Property<int?>("CreatedById")
                         .HasColumnType("integer");
 
                     b.Property<string>("Name")
@@ -262,8 +262,7 @@ namespace Stms_backend.Migrations
                     b.HasOne("Stms_backend.Models.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("Stms_backend.Models.Project", "Project")
                         .WithMany("Runs")

@@ -24,6 +24,7 @@ public class Program
         builder.Services.AddScoped<IProjectService, ProjectService>();
         builder.Services.AddScoped<ITestSuiteService, TestSuiteService>();
         builder.Services.AddScoped<ITestCaseService, TestCaseService>();
+        builder.Services.AddScoped<ITestRunService, TestRunService>();
         
         builder.Services.AddOpenApi();
         

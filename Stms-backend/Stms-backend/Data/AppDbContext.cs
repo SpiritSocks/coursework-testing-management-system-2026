@@ -31,6 +31,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .HasOne(r => r.CreatedBy)
             .WithMany()
             .HasForeignKey(r => r.CreatedById)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }

@@ -10,8 +10,8 @@ public class TestRun
     public int ProjectId { get; set; }
     public Project Project { get; set; } = null!;
 
-    public int CreatedById { get; set; }
-    public User CreatedBy { get; set; } = null!;
+    public int? CreatedById { get; set; }
+    public User? CreatedBy { get; set; }
 
     public List<TestResult> Results { get; set; } = [];
 }
