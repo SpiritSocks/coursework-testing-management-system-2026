@@ -8,9 +8,9 @@ type ProjectCardProps = {
 }
 
 export default function ProjectCard({ project, onOpen }: ProjectCardProps) {
-  const passed = project.lastRunPassed ?? 0
-  const failed = project.lastRunFailed ?? 0
-  const runCount = project.runCount ?? 0
+  const passed = project.lastRunPassed
+  const failed = project.lastRunFailed
+  const runCount = project.runCount
 
   return (
     <button type="button" className="project-card" onClick={() => onOpen(project)}>
@@ -24,8 +24,8 @@ export default function ProjectCard({ project, onOpen }: ProjectCardProps) {
       </p>
 
       <div className="project-card-stats">
-        <span><strong>{project.suiteCount ?? 0}</strong> suites</span>
-        <span><strong>{project.caseCount ?? 0}</strong> cases</span>
+        <span><strong>{project.suiteCount}</strong> suites</span>
+        <span><strong>{project.caseCount}</strong> cases</span>
         <span><strong>{runCount}</strong> runs</span>
       </div>
 

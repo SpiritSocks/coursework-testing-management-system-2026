@@ -1,16 +1,15 @@
-// Первые четыре поля совпадают с ProjectDto на бэкенде.
-// Статистики пока нет в API, поэтому эти поля необязательные (?).
+// Совпадает с ProjectDto на бэкенде.
 export interface Project {
   id: number
   name: string
   description: string | null
   createdAt: string
 
-  suiteCount?: number
-  caseCount?: number
-  runCount?: number
-  lastRunPassed?: number // в процентах, 0–100
-  lastRunFailed?: number // в процентах, 0–100
+  suiteCount: number
+  caseCount: number
+  runCount: number
+  lastRunPassed: number // в процентах, 0–100
+  lastRunFailed: number // в процентах, 0–100
 }
 
 // Совпадает с CreateProjectDto на бэкенде.
