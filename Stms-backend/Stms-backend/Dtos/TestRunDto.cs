@@ -24,8 +24,12 @@ public class TestRunResultDto
 {
     public int Id { get; set; }
     public int TestCaseId { get; set; }
+    public int TestSuiteId { get; set; }
     public string Title { get; set; } = string.Empty;
     public string SuiteName { get; set; } = string.Empty;
+    public string? Preconditions { get; set; }
+    public string Steps { get; set; } = string.Empty;
+    public string ExpectedResult { get; set; } = string.Empty;
     public ResultStatus Status { get; set; }
     public string? Comment { get; set; }
 }

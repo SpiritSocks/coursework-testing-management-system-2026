@@ -48,8 +48,12 @@ public class TestRunService(AppDbContext db) : ITestRunService
                     {
                         Id = result.Id,
                         TestCaseId = result.TestCaseId,
+                        TestSuiteId = result.TestCase.TestSuiteId,
                         Title = result.TestCase.Title,
                         SuiteName = result.TestCase.TestSuite.Name,
+                        Preconditions = result.TestCase.Preconditions,
+                        Steps = result.TestCase.Steps,
+                        ExpectedResult = result.TestCase.ExpectedResult,
                         Status = result.Status,
                         Comment = result.Comment
                     }).ToList()
