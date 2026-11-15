@@ -2,11 +2,9 @@ import { useState } from "react";
 import Sidebar, { type PageName } from "./components/Sidebar";
 import ProjectsPage from "./pages/ProjectsPage";
 import TestCasesPage from "./pages/TestCasesPage";
+import TestRunsPage from "./pages/TestRunsPage";
 import type { Project } from "./types/project";
 import "./App.css";
-
-// Позже пользователь будет браться из JWT после входа
-const currentUser = { name: "Anna Testova", role: "Tester" };
 
 function App() {
   // Простое переключение страниц; позже можно заменить на React Router
@@ -24,8 +22,6 @@ function App() {
       <Sidebar
         activePage={activePage}
         onNavigate={setActivePage}
-        userName={currentUser.name}
-        userRole={currentUser.role}
       />
 
       {activePage === "projects" && <ProjectsPage onOpenProject={openProject} />}
@@ -53,12 +49,7 @@ function App() {
         </main>
       )}
 
-      {activePage === "runs" && (
-        <main className="placeholder-page">
-          <h1 className="page-title">Test runs</h1>
-          <p className="page-subtitle">This page is not built yet.</p>
-        </main>
-      )}
+      {activePage === "runs" && <TestRunsPage initialProject={currentProject} />}
     </div>
   );
 }

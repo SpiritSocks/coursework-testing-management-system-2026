@@ -20,17 +20,18 @@ const navItems: NavItem[] = [
 type SidebarProps = {
   activePage: PageName
   onNavigate: (page: PageName) => void
-  userName: string
-  userRole: string
+  userName?: string
+  userRole?: string
 }
 
 export default function Sidebar({ activePage, onNavigate, userName, userRole }: SidebarProps) {
-  // "Anna Testova" -> "AT"
   const initials = userName
+    ? userName
     .split(' ')
     .map((word) => word[0])
     .join('')
     .toUpperCase()
+    : ''
 
   return (
     <aside className="sidebar">
@@ -59,13 +60,13 @@ export default function Sidebar({ activePage, onNavigate, userName, userRole }: 
         ))}
       </nav>
 
-      <div className="sidebar-user">
+      {userName && userRole && <div className="sidebar-user">
         <div className="sidebar-avatar">{initials}</div>
         <div className="sidebar-user-text">
           <span className="sidebar-user-name">{userName}</span>
           <span className="sidebar-user-role">{userRole}</span>
         </div>
-      </div>
+      </div>}
     </aside>
   )
 }
