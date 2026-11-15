@@ -15,6 +15,18 @@ public class TestCaseDto
     public DateTime CreatedAt { get; set; }
 }
 
+public class TestCaseHistoryDto
+{
+    public int ResultId { get; set; }
+    public int RunId { get; set; }
+    public string RunName { get; set; } = string.Empty;
+    public ResultStatus Status { get; set; }
+    public string? Comment { get; set; }
+    public DateTime? ExecutedAt { get; set; }
+    public DateTime StartedAt { get; set; }
+    public DateTime? CompletedAt { get; set; }
+}
+
 public class CreateTestCaseDto
 {
     [Required, MaxLength(300)]

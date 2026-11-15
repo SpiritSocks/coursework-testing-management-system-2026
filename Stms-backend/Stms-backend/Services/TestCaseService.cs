@@ -57,6 +57,30 @@ public class TestCaseService : ITestCaseService
             .FirstOrDefaultAsync();
     }
 
+    public async Task<List<TestCaseHistoryDto>?> GetHistoryAsync(int id)
+    {
+        if (!await _db.TestCases.AnyAsync(testCase => testCase.Id == id))
+        {
+            return null;
+        }
+
+        return await _db.TestResults
+            .Where(result => result.TestCaseId == id)
+            .OrderByDescending(result => result.TestRun.StartedAt)
+            .Select(result => new TestCaseHistoryDto
+            {
+                ResultId = result.Id,
+                RunId = result.TestRunId,
+                RunName = result.TestRun.Name,
+                Status = result.Status,
+                Comment = result.Comment,
+                ExecutedAt = result.ExecutedAt,
+                StartedAt = result.TestRun.StartedAt,
+                CompletedAt = result.TestRun.CompletedAt
+            })
+            .ToListAsync();
+    }
+
     public async Task<TestCaseDto?> CreateAsync(int suiteId, CreateTestCaseDto dto)
     {
         var suiteExists = await _db.TestSuites.AnyAsync(s => s.Id == suiteId);

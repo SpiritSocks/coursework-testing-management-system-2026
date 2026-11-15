@@ -38,6 +38,18 @@ public class TestCasesController : ControllerBase
         return Ok(testCase);
     }
 
+    [HttpGet("api/cases/{id:int}/history")]
+    public async Task<ActionResult<List<TestCaseHistoryDto>>> GetHistory(int id)
+    {
+        var history = await _cases.GetHistoryAsync(id);
+        if (history == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(history);
+    }
+
     [HttpPost("api/suites/{suiteId:int}/cases")]
     public async Task<ActionResult<TestCaseDto>> Create(int suiteId, CreateTestCaseDto dto)
     {
