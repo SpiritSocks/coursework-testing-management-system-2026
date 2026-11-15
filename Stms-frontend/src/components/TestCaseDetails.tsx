@@ -1,16 +1,20 @@
-import type { TestCase } from '../types/testCase'
+import type { TestCase, TestCaseHistoryItem } from '../types/testCase'
 import { formatDate } from '../utils/formatDate'
 import { CheckCircleIcon } from './Icons'
+import TestCaseHistory from './TestCaseHistory'
 import './TestCaseDetails.css'
 
 type TestCaseDetailsProps = {
   testCase: TestCase
   suiteName: string
   onEdit: () => void
+  history: TestCaseHistoryItem[] | undefined
+  historyError?: string
+  onOpenRun: (runId: number) => void
 }
 
 // Правая колонка: всё о выбранном кейсе.
-export default function TestCaseDetails({ testCase, suiteName, onEdit }: TestCaseDetailsProps) {
+export default function TestCaseDetails({ testCase, suiteName, onEdit, history, historyError, onOpenRun }: TestCaseDetailsProps) {
   // Шаги хранятся одной строкой, каждый шаг на новой строке.
   // Пустые строки отбрасываем.
   const steps = testCase.steps
@@ -73,10 +77,9 @@ export default function TestCaseDetails({ testCase, suiteName, onEdit }: TestCas
             <span className="meta-label">Created</span>
             <span>{formatDate(testCase.createdAt)}</span>
           </div>
-          {/* История прогонов появится, когда на бэкенде будет API для TestRun/TestResult */}
           <div className="meta-item">
             <span className="meta-label">Run history</span>
-            <span className="meta-muted">Not available yet</span>
+            <TestCaseHistory history={history} error={historyError} onOpenRun={onOpenRun} />
           </div>
         </aside>
       </div>

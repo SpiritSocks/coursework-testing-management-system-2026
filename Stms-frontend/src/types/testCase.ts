@@ -1,6 +1,7 @@
 // Типы совпадают с DTO на бэкенде (Dtos/TestSuiteDto.cs, Dtos/TestCaseDto.cs).
 // Priority приходит строкой, потому что в Program.cs подключён JsonStringEnumConverter.
 export type Priority = 'Low' | 'Medium' | 'High'
+export type ResultStatus = 'Untested' | 'Passed' | 'Failed' | 'Blocked' | 'Skipped'
 
 export interface TestSuite {
   id: number
@@ -39,4 +40,15 @@ export interface CreateTestCaseData {
 
 export interface UpdateTestCaseData extends CreateTestCaseData {
   testSuiteId: number
+}
+
+export interface TestCaseHistoryItem {
+  resultId: number
+  runId: number
+  runName: string
+  status: ResultStatus
+  comment: string | null
+  executedAt: string | null
+  startedAt: string
+  completedAt: string | null
 }

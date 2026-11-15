@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
-import type { Priority, TestCase, TestSuite, UpdateTestCaseData } from '../types/testCase'
+import type { Priority, TestCase, TestCaseHistoryItem, TestSuite, UpdateTestCaseData } from '../types/testCase'
 import { formatDate } from '../utils/formatDate'
+import TestCaseHistory from './TestCaseHistory'
 import './EditTestCaseForm.css'
 
 type EditTestCaseFormProps = {
@@ -10,6 +11,9 @@ type EditTestCaseFormProps = {
   onSave: (data: UpdateTestCaseData) => Promise<void>
   onDelete: () => Promise<void>
   onCancel: () => void
+  history: TestCaseHistoryItem[] | undefined
+  historyError?: string
+  onOpenRun: (runId: number) => void
 }
 
 const priorities: Priority[] = ['Low', 'Medium', 'High']
@@ -21,6 +25,9 @@ export default function EditTestCaseForm({
   onSave,
   onDelete,
   onCancel,
+  history,
+  historyError,
+  onOpenRun,
 }: EditTestCaseFormProps) {
   const [suiteId, setSuiteId] = useState(testCase.testSuiteId)
   const [title, setTitle] = useState(testCase.title)
@@ -140,7 +147,7 @@ export default function EditTestCaseForm({
             </section>
             <section>
               <h3>Recent results</h3>
-              <p>Run history is not available yet.</p>
+              <TestCaseHistory history={history} error={historyError} onOpenRun={onOpenRun} />
             </section>
           </aside>
         </div>

@@ -11,17 +11,29 @@ function App() {
   const [activePage, setActivePage] = useState<PageName>("projects");
   // Проект, открытый на странице Projects; от него зависят тест-кейсы
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
+  const [targetRunId, setTargetRunId] = useState<number | null>(null);
 
   function openProject(project: Project) {
     setCurrentProject(project);
+    setTargetRunId(null);
     setActivePage("cases");
+  }
+
+  function openRun(runId: number) {
+    setTargetRunId(runId);
+    setActivePage("runs");
+  }
+
+  function navigate(page: PageName) {
+    if (page !== "runs") setTargetRunId(null);
+    setActivePage(page);
   }
 
   return (
     <div className="app-layout">
       <Sidebar
         activePage={activePage}
-        onNavigate={setActivePage}
+        onNavigate={navigate}
       />
 
       {activePage === "projects" && <ProjectsPage onOpenProject={openProject} />}
@@ -32,6 +44,7 @@ function App() {
           key={currentProject.id}
           project={currentProject}
           onBackToProjects={() => setActivePage("projects")}
+          onOpenRun={openRun}
         />
       )}
 
@@ -49,7 +62,7 @@ function App() {
         </main>
       )}
 
-      {activePage === "runs" && <TestRunsPage initialProject={currentProject} />}
+      {activePage === "runs" && <TestRunsPage initialProject={currentProject} initialRunId={targetRunId} />}
     </div>
   );
 }

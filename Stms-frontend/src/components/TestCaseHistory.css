@@ -1,0 +1,14 @@
+.case-history-list { display: flex; flex-direction: column; gap: 10px; }
+.case-history-row { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 0; border: 0; background: transparent; color: var(--text); font: inherit; text-align: left; cursor: pointer; }
+.case-history-row:hover .history-copy strong { color: var(--accent); }
+.history-copy { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.history-copy strong { overflow: hidden; font-size: 13px; font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }
+.history-copy small { max-width: 190px; overflow: hidden; color: var(--text-muted); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.history-status { flex: 0 0 auto; display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 11px; background: #eceef1; color: #4b5563; font-size: 11px; font-weight: 600; }
+.history-status-Passed { background: #e3f4ea; color: #146c43; }
+.history-status-Failed { background: #fde7e5; color: #b42318; }
+.history-status-Blocked { background: #ffefd9; color: #a04100; }
+.history-status-Skipped { background: #eceef1; color: #4b5563; }
+.history-status-Untested { background: #e8eefd; color: #1e3fb0; }
+.history-message { margin: 0; color: var(--text-muted); font-size: 13px; }
+.history-error { color: #b42318; }

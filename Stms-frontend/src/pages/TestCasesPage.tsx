@@ -1,19 +1,20 @@
 import { useEffect, useState } from 'react'
 import { createSuite, getSuites } from '../api/testSuitesApi'
-import { createCase, deleteCase, getCases, updateCase } from '../api/testCasesApi'
+import { createCase, deleteCase, getCaseHistory, getCases, updateCase } from '../api/testCasesApi'
 import EditTestCaseForm from '../components/EditTestCaseForm'
 import NewTestCaseForm from '../components/NewTestCaseForm'
 import SuiteTree, { type PriorityFilter } from '../components/SuiteTree'
 import TestCaseDetails from '../components/TestCaseDetails'
 import { PlusIcon } from '../components/Icons'
 import type { Project } from '../types/project'
-import type { CreateTestCaseData, TestCase, TestSuite, UpdateTestCaseData } from '../types/testCase'
+import type { CreateTestCaseData, TestCase, TestCaseHistoryItem, TestSuite, UpdateTestCaseData } from '../types/testCase'
 import './ProjectsPage.css' // общие стили заголовка страницы и сообщений
 import './TestCasesPage.css'
 
 type TestCasesPageProps = {
   project: Project
   onBackToProjects: () => void
+  onOpenRun: (runId: number) => void
 }
 
 // API отдаёт кейсы по одному набору, поэтому сначала берём наборы проекта,
@@ -24,7 +25,7 @@ async function loadSuitesAndCases(projectId: number) {
   return { suites, cases: casesPerSuite.flat() }
 }
 
-export default function TestCasesPage({ project, onBackToProjects }: TestCasesPageProps) {
+export default function TestCasesPage({ project, onBackToProjects, onOpenRun }: TestCasesPageProps) {
   const [suites, setSuites] = useState<TestSuite[]>([])
   const [cases, setCases] = useState<TestCase[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -35,6 +36,8 @@ export default function TestCasesPage({ project, onBackToProjects }: TestCasesPa
   const [selectedCaseId, setSelectedCaseId] = useState<number | null>(null)
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [editingCaseId, setEditingCaseId] = useState<number | null>(null)
+  const [historyByCase, setHistoryByCase] = useState<Record<number, TestCaseHistoryItem[]>>({})
+  const [historyErrors, setHistoryErrors] = useState<Record<number, string>>({})
 
   // Загружаем наборы и кейсы при открытии страницы
   useEffect(() => {
@@ -86,6 +89,16 @@ export default function TestCasesPage({ project, onBackToProjects }: TestCasesPa
     visibleCases.find((c) => c.id === selectedCaseId) ?? visibleCases[0] ?? null
   const selectedSuite = suites.find((s) => s.id === selectedCase?.testSuiteId)
   const editingCase = cases.find((testCase) => testCase.id === editingCaseId) ?? null
+
+  useEffect(() => {
+    if (!selectedCase) return
+    const caseId = selectedCase.id
+    if (historyByCase[caseId] || historyErrors[caseId]) return
+
+    getCaseHistory(caseId)
+      .then((history) => setHistoryByCase((current) => ({ ...current, [caseId]: history })))
+      .catch((err: Error) => setHistoryErrors((current) => ({ ...current, [caseId]: err.message })))
+  }, [selectedCase, historyByCase, historyErrors])
 
   return (
     <main className="test-cases-page">
@@ -139,6 +152,9 @@ export default function TestCasesPage({ project, onBackToProjects }: TestCasesPa
           onSave={(data) => handleUpdateCase(editingCase, data)}
           onDelete={() => handleDeleteCase(editingCase)}
           onCancel={() => setEditingCaseId(null)}
+          history={historyByCase[editingCase.id]}
+          historyError={historyErrors[editingCase.id]}
+          onOpenRun={onOpenRun}
         />
       )}
 
@@ -161,6 +177,9 @@ export default function TestCasesPage({ project, onBackToProjects }: TestCasesPa
               testCase={selectedCase}
               suiteName={selectedSuite?.name ?? ''}
               onEdit={() => setEditingCaseId(selectedCase.id)}
+              history={historyByCase[selectedCase.id]}
+              historyError={historyErrors[selectedCase.id]}
+              onOpenRun={onOpenRun}
             />
           ) : (
             <div className="case-empty">

@@ -5,14 +5,14 @@ import type { Project } from '../types/project'
 import type { ResultStatus, TestRun, TestRunDetails } from '../types/testRun'
 import './TestRunsPage.css'
 
-type TestRunsPageProps = { initialProject: Project | null }
+type TestRunsPageProps = { initialProject: Project | null, initialRunId?: number | null }
 
 const resultStatuses: Exclude<ResultStatus, 'Untested'>[] = ['Passed', 'Failed', 'Blocked', 'Skipped']
 const statusLabels: Record<Exclude<ResultStatus, 'Untested'>, string> = {
   Passed: 'Pass', Failed: 'Fail', Blocked: 'Block', Skipped: 'Skip',
 }
 
-export default function TestRunsPage({ initialProject }: TestRunsPageProps) {
+export default function TestRunsPage({ initialProject, initialRunId }: TestRunsPageProps) {
   const [projects, setProjects] = useState<Project[]>([])
   const [projectId, setProjectId] = useState(initialProject?.id ?? 0)
   const [runs, setRuns] = useState<TestRun[]>([])
@@ -38,10 +38,11 @@ export default function TestRunsPage({ initialProject }: TestRunsPageProps) {
       .then(async (items) => {
         setError(null)
         setRuns(items)
-        setRun(items[0] ? await getRun(items[0].id) : null)
+        const selected = items.find((item) => item.id === initialRunId) ?? items[0]
+        setRun(selected ? await getRun(selected.id) : null)
       })
       .catch((err: Error) => setError(err.message))
-  }, [projectId])
+  }, [projectId, initialRunId])
 
   const project = projects.find((item) => item.id === projectId) ?? initialProject
   const counts = useMemo(() => {

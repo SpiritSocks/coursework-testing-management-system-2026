@@ -1,4 +1,6 @@
-export type ResultStatus = 'Untested' | 'Passed' | 'Failed' | 'Blocked' | 'Skipped'
+import type { ResultStatus } from './testCase'
+
+export type { ResultStatus } from './testCase'
 
 export interface TestRun {
   id: number
