@@ -4,8 +4,8 @@ import './TestCaseHistory.css'
 type TestCaseHistoryProps = {
   history: TestCaseHistoryItem[] | undefined
   onOpenRun: (runId: number) => void
-  limit?: number
   error?: string
+  label?: string
 }
 
 function formatHistoryDate(item: TestCaseHistoryItem) {
@@ -15,22 +15,29 @@ function formatHistoryDate(item: TestCaseHistoryItem) {
   })
 }
 
-export default function TestCaseHistory({ history, onOpenRun, limit = 5, error }: TestCaseHistoryProps) {
-  if (error) return <p className="history-message history-error">{error}</p>
-  if (!history) return <p className="history-message">Loading…</p>
-  if (history.length === 0) return <p className="history-message">No runs yet.</p>
-
+export default function TestCaseHistory({ history, onOpenRun, error, label = 'Run history' }: TestCaseHistoryProps) {
   return (
-    <div className="case-history-list">
-      {history.slice(0, limit).map((item) => (
-        <button key={item.resultId} type="button" className="case-history-row" onClick={() => onOpenRun(item.runId)}>
-          <span className="history-copy">
-            <strong>{item.runName}</strong>
-            <small>{formatHistoryDate(item)}{item.comment ? ` · ${item.comment}` : ''}</small>
-          </span>
-          <span className={`history-status history-status-${item.status}`}>{item.status}</span>
-        </button>
-      ))}
-    </div>
+    <details className="case-history-dropdown">
+      <summary>
+        <span>{label}</span>
+        <span className="history-count">{history ? history.length : '…'}</span>
+      </summary>
+      <div className="case-history-content">
+        {error && <p className="history-message history-error">{error}</p>}
+        {!error && !history && <p className="history-message">Loading…</p>}
+        {!error && history?.length === 0 && <p className="history-message">No runs yet.</p>}
+        {!error && history && history.length > 0 && <div className="case-history-list">
+          {history.map((item) => (
+            <button key={item.resultId} type="button" className="case-history-row" onClick={() => onOpenRun(item.runId)}>
+              <span className="history-copy">
+                <strong>{item.runName}</strong>
+                <small>{formatHistoryDate(item)}{item.comment ? ` · ${item.comment}` : ''}</small>
+              </span>
+              <span className={`history-status history-status-${item.status}`}>{item.status}</span>
+            </button>
+          ))}
+        </div>}
+      </div>
+    </details>
   )
 }

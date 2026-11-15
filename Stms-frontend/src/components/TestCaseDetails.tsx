@@ -77,8 +77,7 @@ export default function TestCaseDetails({ testCase, suiteName, onEdit, history, 
             <span className="meta-label">Created</span>
             <span>{formatDate(testCase.createdAt)}</span>
           </div>
-          <div className="meta-item">
-            <span className="meta-label">Run history</span>
+          <div className="meta-item history-meta">
             <TestCaseHistory history={history} error={historyError} onOpenRun={onOpenRun} />
           </div>
         </aside>

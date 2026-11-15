@@ -139,15 +139,14 @@ export default function EditTestCaseForm({
           </div>
 
           <aside className="edit-case-side" aria-label="Case details">
-            <section>
+            <section className="edit-case-details-card">
               <h3>Details</h3>
               <div><span>ID</span><strong>TC-{testCase.id}</strong></div>
               <div><span>Created</span><strong>{formatDate(testCase.createdAt)}</strong></div>
               <div><span>Project</span><strong>{projectName}</strong></div>
             </section>
             <section>
-              <h3>Recent results</h3>
-              <TestCaseHistory history={history} error={historyError} onOpenRun={onOpenRun} />
+              <TestCaseHistory history={history} error={historyError} onOpenRun={onOpenRun} label="Recent results" />
             </section>
           </aside>
         </div>
